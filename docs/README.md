@@ -85,7 +85,7 @@ This will start:
 -   Grobid server (for PDF structure extraction)
 -   Ollama LLM environment
 
-Allow up to 1--2 minutes for services to initialize.
+Allow up to 1-2 minutes for services to initialize.
 
 ## 3.3 Pull Ollama Models
 
@@ -161,7 +161,7 @@ Example:
     python manage.py shell -c "from PB_Assistant.models import PlanetaryBoundary; PlanetaryBoundary.objects.create(name='Climate Change', short_name='cc')"
 
 Repeat this for each boundary you want to track (e.g., biodiversity,
-land use, etc.). You can add them from admin panel after step 7.
+land use, etc.). You can add them from admin panel after step 7 as well.
 
 ## 6.2 Import PDFs
 
