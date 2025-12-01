@@ -101,9 +101,8 @@ Examples:
 
     ollama pull llama3
     ollama pull mistral
-    ollama pull nomic-embed-text
 
-These models will power embeddings and question answering.
+These models will power question answering.
 
 # 4. Database Setup & pgvector Extension
 
