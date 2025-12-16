@@ -17,6 +17,7 @@ db_handler = DatabaseHandler()
 embedder = TextEmbedder()
 
 OLLAMA_BASE_URL = settings.OLLAMA_BASE_URL
+@login_required
 def ollama_models(request):
     """
     Returns: {"models": ["llama3:latest", "mistral:7b", ...]}
