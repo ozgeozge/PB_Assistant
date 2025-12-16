@@ -69,7 +69,7 @@ Create a `.env` file next to your `docker-compose.yaml` containing:
 
     GROBID_URL=http://localhost:8070
 
-    OLLAMA_BASE_URL=http://ollama:11434
+    OLLAMA_BASE_URL=http://localhost:11434
 
 This file will be read by both Django and Docker.
 
@@ -91,7 +91,7 @@ Allow up to 1-2 minutes for services to initialize.
 
 Enter the Ollama container:
 
-    docker exec -it ollama bash
+    docker exec -it ollama_container bash
 
 Pull any required models:
 
@@ -107,7 +107,9 @@ These models will power question answering.
 # 4. Database Setup & pgvector Extension
 
 PB Assistant uses pgvector inside PostgreSQL. You must enable the
-extension using a Django migration.
+extension using a Django migration. 
+
+As this repository already includes initial migration files, you can directly continue to step [4.3](#43-apply-migrations).
 
 ## 4.1 Create a Migration for pgvector
 
@@ -127,15 +129,14 @@ class Migration(migrations.Migration):
     ]
 ```
 
-Apply migration:
+## 4.2 Create Migrations
 
-    python manage.py migrate
-
-## 4.2 Apply Application Migrations
-
-Now create and apply all other model-based migrations:
+Now create other model-based migrations:
 
     python manage.py makemigrations
+
+## 4.3 Apply migrations
+
     python manage.py migrate
 
 # 5. Create an Admin User
