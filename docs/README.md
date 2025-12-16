@@ -63,7 +63,7 @@ Create a `.env` file next to your `docker-compose.yaml` containing:
 
     POSTGRES_DB=your_db_name
     POSTGRES_USER=your_username
-    POSTPOSTGRES_PASSWORD=your_password
+    POSTGRES_PASSWORD=your_password
     POSTGRES_HOST=localhost
     POSTGRES_PORT=5432
 
@@ -85,7 +85,7 @@ This will start:
 -   Grobid server (for PDF structure extraction)
 -   Ollama LLM environment
 
-Allow up to 1--2 minutes for services to initialize.
+Allow up to 1-2 minutes for services to initialize.
 
 ## 3.3 Pull Ollama Models
 
@@ -101,9 +101,8 @@ Examples:
 
     ollama pull llama3
     ollama pull mistral
-    ollama pull nomic-embed-text
 
-These models will power embeddings and question answering.
+These models will power question answering.
 
 # 4. Database Setup & pgvector Extension
 
@@ -161,7 +160,7 @@ Example:
     python manage.py shell -c "from PB_Assistant.models import PlanetaryBoundary; PlanetaryBoundary.objects.create(name='Climate Change', short_name='cc')"
 
 Repeat this for each boundary you want to track (e.g., biodiversity,
-land use, etc.). You can add them from admin panel after step 7.
+land use, etc.). You can add them from admin panel after step 7 as well.
 
 ## 6.2 Import PDFs
 
