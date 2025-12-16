@@ -63,7 +63,7 @@ Create a `.env` file next to your `docker-compose.yaml` containing:
 
     POSTGRES_DB=your_db_name
     POSTGRES_USER=your_username
-    POSTPOSTGRES_PASSWORD=your_password
+    POSTGRES_PASSWORD=your_password
     POSTGRES_HOST=localhost
     POSTGRES_PORT=5432
 
