@@ -1,8 +1,9 @@
-psycopg2-binary
-pgvector
-python-dotenv
-sentence-transformers
-langchain_classic
-langchain_community
-bs4
-lxml
+Django==5.2.8
+psycopg2-binary==2.9.11
+pgvector==0.4.1
+python-dotenv==1.2.1
+sentence-transformers==5.1.2
+langchain-classic==1.0.0
+langchain-community==0.4.1
+bs4==0.0.2
+lxml==6.0.2
