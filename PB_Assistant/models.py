@@ -14,6 +14,29 @@ class PlanetaryBoundary(models.Model):
     short_name = models.CharField(max_length=255)
     def __str__(self):
         return self.name
+    
+class Source(models.Model):
+    name = models.CharField(max_length=100, unique=True)  # e.g., "openalex"
+    display_name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+    base_url = models.URLField(null=True, blank=True)
+    enabled = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.display_name
+
+
+class BoundaryQuery(models.Model):
+    planetary_boundary = models.ForeignKey(PlanetaryBoundary, on_delete=models.CASCADE, related_name="queries")
+    source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name="boundary_queries")
+    query = models.TextField()
+
+    class Meta:
+        unique_together = ("planetary_boundary", "source")
+
+    def __str__(self):
+        return f"{self.source.name} query for {self.planetary_boundary.short_name}"
+
 
 class SearchHistory(models.Model):
     user_id = models.IntegerField()
@@ -39,8 +62,15 @@ class AcademicPaper(models.Model):
     title = models.CharField(max_length=512, null=True, blank=True)
     title_slug = models.SlugField(max_length=512, null=True, blank=True)
 
+    wos_id = models.CharField(max_length=255, null=True, blank=True)
+    scopus_id = models.CharField(max_length=255, null=True, blank=True)
+    openalex_id = models.CharField(max_length=255, null=True, blank=True)
+
     publication_year = models.IntegerField(null=True, blank=True)
     source = models.CharField(max_length=255, null=True, blank=True)
+    best_oa_pdf_url = models.URLField(max_length=2000, null=True, blank=True)
+    all_pdf_urls = models.JSONField(blank=True, default=list, help_text="A JSON array of URLs")
+
     keywords = models.JSONField(null=True, blank=True)
     author_list = models.JSONField(default=list, blank=True)
     meta = models.JSONField(null=True, blank=True)

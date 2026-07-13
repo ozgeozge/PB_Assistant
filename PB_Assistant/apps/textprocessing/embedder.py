@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class TextEmbedder:
     def __init__(self, model_name: str = "BAAI/bge-base-en-v1.5", chunk_size: int = 800,
                  chunk_overlap: int = 100):
-        self.model = SentenceTransformer(model_name, trust_remote_code=True)
+        self.model = SentenceTransformer(model_name)
         self.splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
 
     def _chunk(self, text: str) -> List[str]:
