@@ -3,3 +3,13 @@
 ollama_data
 .env
 
+cursors/
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+*.log
+*.sqlite3
+*.dump

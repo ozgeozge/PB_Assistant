@@ -16,7 +16,6 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
-# load_dotenv(dotenv_path=BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -141,3 +140,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 GROBID_URL = os.getenv("GROBID_URL")
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
+
+FETCHING_SOURCES = [
+    'PB_Assistant.apps.ingestion.sources.openalex.OpenAlexAPI',
+    'PB_Assistant.apps.ingestion.sources.scopus.ScopusAPI',
+    'PB_Assistant.apps.ingestion.sources.webofscience.WoSAPI',
+]
+
+OPEN_ALEX_API_KEY = os.getenv("OPEN_ALEX_API_KEY")
+SCOPUS_API_KEY = os.getenv("SCOPUS_API_KEY")
+WOS_API_KEY = os.getenv("WOS_API_KEY")
+GROBID_URL = os.getenv("GROBID_URL")
+
+FETCHING_API_KEYS = [
+    OPEN_ALEX_API_KEY,
+    SCOPUS_API_KEY,
+    WOS_API_KEY
+]
+
+FETCHING_API_KEYS_BY_SOURCE = {
+    'OpenAlexAPI': OPEN_ALEX_API_KEY,
+    'ScopusAPI': SCOPUS_API_KEY,
+    'WoSAPI': WOS_API_KEY,
+}
+
+MEDIA_ROOT = BASE_DIR.parent / 'media'
+PDF_PATH = MEDIA_ROOT / 'pdf_files'
