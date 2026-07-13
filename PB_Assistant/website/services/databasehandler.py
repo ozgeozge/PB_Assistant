@@ -3,6 +3,29 @@ from PB_Assistant.models import SearchHistory, AcademicPaper, AcademicPaperText
 import logging
 logger = logging.getLogger(__name__)
 
+
+def format_author_name(author):
+    if isinstance(author, str):
+        return author
+    if isinstance(author, dict):
+        return (
+            author.get("name")
+            or author.get("display_name")
+            or author.get("displayName")
+            or author.get("authname")
+            or ""
+        )
+    return ""
+
+
+def format_authors(author_list):
+    return ", ".join(
+        name
+        for author in author_list or []
+        if (name := format_author_name(author))
+    )
+
+
 class DatabaseHandler:
 
     def retrieve_articles_by_doc_ids(self, doc_ids):
@@ -12,7 +35,7 @@ class DatabaseHandler:
             for academicpaper in academicpapers:
                 article_dict = model_to_dict(academicpaper)
                 article_dict['academicpaper_text_id'] = academicpaper.academicpaper_text.id if academicpaper.academicpaper_text else None
-                article_dict['authors_string'] = ", ".join(a.get("name", "") for a in academicpaper.author_list if a.get("name"))
+                article_dict['authors_string'] = format_authors(academicpaper.author_list)
                 results.append(article_dict)
             return results
         except Exception as e:

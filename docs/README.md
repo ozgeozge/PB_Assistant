@@ -59,19 +59,16 @@ These are all started using Docker Compose.
 
 ## 3.1 Create a .env File
 
-Create a `.env` file next to your `docker-compose.yaml` containing:
+Copy the example environment file and edit the values for your local
+setup:
 
-    POSTGRES_DB=your_db_name
-    POSTGRES_USER=your_username
-    POSTGRES_PASSWORD=your_password
-    POSTGRES_HOST=localhost
-    POSTGRES_PORT=5432
+    copy .env.example .env
 
-    GROBID_URL=http://localhost:8070
-
-    OLLAMA_BASE_URL=http://localhost:11434
-
-This file will be read by both Django and Docker.
+External API access requires user-provided credentials where applicable.
+Users are responsible for complying with each provider's terms, rate
+limits, and institutional license conditions. Do not commit API keys,
+raw provider responses, downloaded PDFs, extracted text, embeddings, or
+database dumps.
 
 ## 3.2 Start Docker Containers
 
@@ -152,7 +149,8 @@ http://127.0.0.1:8000/admin/
 # 6. Creating Initial Content
 
 PB Assistant requires Planetary Boundaries to be created before
-importing PDFs or generating embeddings.
+importing PDFs, fetching papers from external sources, or generating
+embeddings.
 
 ## 6.1 Add a Planetary Boundary
 
@@ -163,7 +161,68 @@ Example:
 Repeat this for each boundary you want to track (e.g., biodiversity,
 land use, etc.). You can add them from admin panel after step 7 as well.
 
-## 6.2 Import PDFs
+## 6.2 Configure External Sources
+
+Before `fetch_papers` can run, the database must know two things:
+
+-   which external APIs are available (`Source`)
+-   which query to use for each planetary boundary and source
+    (`BoundaryQuery`)
+
+The `Source.name` values must match the API class names used in the
+code: `OpenAlexAPI`, `ScopusAPI`, and `WoSAPI`.
+
+First, insert the supported sources:
+
+    psql -d your_db_name -f docs/setup_sources.sql
+
+The SQL file inserts `OpenAlexAPI`, `ScopusAPI`, and `WoSAPI` into the
+source table. It also contains example `BoundaryQuery` rows for the
+Climate Change boundary with `short_name = 'cc'`. Edit `cc` and the
+query strings in `docs/setup_sources.sql` before running it for other
+planetary boundaries.
+
+The queries must use the syntax expected by each source.
+
+The fetcher uses `FETCHING_SOURCES` in `PB_Assistant/settings.py` to
+decide which sources to query and in what order.
+
+## 6.3 Fetch Papers From External Sources
+
+Use `fetch_papers` to query configured external sources and insert
+records into the `AcademicPaper` table:
+
+    python manage.py fetch_papers --start-year 2025 --end-year 2026 --pb-names cc
+
+
+If `--pb-names` is omitted, papers are fetched for all configured
+planetary boundaries.
+
+Deduplication is handled during import. Existing papers are matched by
+DOI, then title plus publication year, then source-specific identifiers.
+When a duplicate is found, missing identifiers and metadata are merged
+into the existing `AcademicPaper` row.
+
+## 6.4 Fetch and Process Full Text
+
+After papers are inserted, use `fetch_fulltext` to process open-access
+PDF URLs already stored on those records. The command tries to download
+available PDFs, extract full text with Grobid, save `AcademicPaperText`,
+and create embeddings unless disabled.
+
+Example:
+
+    python manage.py fetch_fulltext --start-year 2025 --end-year 2026 --pb-names cc
+
+To skip embedding:
+
+    python manage.py fetch_fulltext --start-year 2025 --end-year 2026 --pb-names cc --no-embed
+
+
+If a PDF cannot be downloaded or extracted, the processor falls back to
+storing the paper abstract when available.
+
+## 6.5 Import Local PDFs
 
 Import PDF files belonging to a particular boundary:
 
