@@ -1,9 +1,9 @@
-# PB Assistant --- Local Development Setup Guide
+# Local Development Setup Guide
 
 This guide provides a complete walkthrough for installing, configuring,
-and running the PB Assistant application on your local machine. Follow
-each section in order to fully set up the backend, vector database,
-Grobid parser, and LLM environment.
+and running the RAG application provided in this repository on
+your local machine. Follow each section in order to fully set up the
+backend, vector database, Grobid parser, and LLM environment.
 
 # 1. Prerequisites
 
@@ -18,7 +18,7 @@ Before starting, ensure you have the following installed:
 
 # 2. Project Setup
 
-PB Assistant is a Django-based application. For a clean and reproducible
+This application is Django-based. For a clean and reproducible
 setup, we recommend using a Python virtual environment.
 
 ## 2.1 Create a Virtual Environment
@@ -49,7 +49,7 @@ This installs all required libraries.
 
 # 3. Docker Setup (PostgreSQL + Grobid + Ollama)
 
-The PB Assistant system depends on:
+The local system depends on:
 
 -   PostgreSQL (with pgvector extension)
 -   Grobid (for PDF text extraction)
@@ -66,9 +66,7 @@ setup:
 
 External API access requires user-provided credentials where applicable.
 Users are responsible for complying with each provider's terms, rate
-limits, and institutional license conditions. Do not commit API keys,
-raw provider responses, downloaded PDFs, extracted text, embeddings, or
-database dumps.
+limits, and institutional license conditions. Do not commit credentials or provider data to the repository.
 
 ## 3.2 Start Docker Containers
 
@@ -103,7 +101,7 @@ These models will power question answering.
 
 # 4. Database Setup & pgvector Extension
 
-PB Assistant uses pgvector inside PostgreSQL. You must enable the
+This application uses pgvector inside PostgreSQL. You must enable the
 extension using a Django migration. 
 
 As this repository already includes initial migration files, you can directly continue to step [4.3](#43-apply-migrations).
@@ -148,7 +146,7 @@ http://127.0.0.1:8000/admin/
 
 # 6. Creating Initial Content
 
-PB Assistant requires Planetary Boundaries to be created before
+Planetary Boundaries must be created before
 importing PDFs, fetching papers from external sources, or generating
 embeddings.
 
@@ -224,7 +222,8 @@ storing the paper abstract when available.
 
 ## 6.5 Import Local PDFs
 
-Import PDF files belonging to a particular boundary:
+To manually import a local PDF file or local PDF collection belonging to a
+particular boundary:
 
     python manage.py import_pdfs --folder folder_path --boundary short_name
 
@@ -234,7 +233,7 @@ Where:
 -   `short_name` = value from `PlanetaryBoundary.short_name` (e.g.,
     `cc`)
 
-PB Assistant will store metadata, extract text using Grobid, and prepare
+The application will store metadata, extract text using Grobid, and prepare
 embeddings.
 
 # 7. Start the Application
